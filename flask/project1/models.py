@@ -12,3 +12,4 @@ class Fcuser(db.Model):
     password = db.Column(db.String(64))
     userid = db.Column(db.String(32))
     username = db.Column(db.String(32))
+

@@ -16,6 +16,11 @@
       integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
       crossorigin="anonymous"
     ></script>
+    <link
+      rel="stylesheet"
+      ,
+      href="{{url_for('static',filename='css/style.css')}}"
+    />
   </head>
   <body>
     <div class="container">
@@ -25,45 +30,57 @@
       <div class="row mt-5">
         <div class="col-12">
           <form method="POST">
+            {{form.csrf_token}}
+            <!-- ///폼태그를 바꿈으로서 csrf라는 보호기능도 사용할 수 있다. 값에 대한
+            검증 또한 간단해짐. -->
             <div class="form-group">
-              <label for="userid">아이디</label>
+              <!-- <label for="userid">아이디</label>
               <input
                 type="userid"
                 class="form-control"
                 id="userid"
                 placeholder="아이디"
                 name="userid"
-              />
+              /> -->
+              {{form.userid.label("아이디")}} {{form.userid(class=
+              "form-control", placeholder = "아이디")}}
             </div>
             <div class="form-group">
-              <label for="username">사용자 이름</label>
+              <!-- <label for="username">사용자 이름</label>
               <input
                 type="text"
                 class="form-control"
                 id="username"
                 placeholder="사용자 이름"
                 name="username"
-              />
+              /> -->
+              {{form.username.label("사용자 이름")}} {{form.username(class=
+              "form-control", placeholder = "사용자 이름")}}
             </div>
             <div class="form-group">
-              <label for="password">비밀번호</label>
+              <!-- <label for="password">비밀번호</label>
               <input
                 type="password"
                 class="form-control"
                 id="password"
                 placeholder="비밀번호"
                 name="password"
-              />
+              /> -->
+              {{form.password.label("비밀번호")}} {{form.password(class=
+              "form-control", placeholder = "비밀번호")}}
             </div>
             <div class="form-group">
-              <label for="re-password">비밀번호 확인</label>
+              <!-- <label for="re-password">비밀번호 확인</label>
               <input
                 type="re-password"
                 class="form-control"
                 id="re-password"
                 placeholder="비밀번호 확인"
                 name="re-password"
-              />
+              /> -->
+              {{form.repassword.label("비밀번호 확인")}}
+              {{form.repassword(class= "form-control", placeholder =
+              "비밀번호확인")}}
             </div>
             <button type="submit" class="btn btn-primary">등록</button>
           </form>

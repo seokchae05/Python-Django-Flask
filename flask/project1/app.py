@@ -4,6 +4,11 @@ from flask import request
 from flask import redirect
 from flask import render_template
 from models import db
+from flask_wtf.csrf import CSRFProtect
+from forms import RegisterForm
+from forms import LoginForm
+from flask import session
+
 
 from models import Fcuser
 
@@ -15,33 +20,40 @@ app = Flask(__name__)
 
 @app.route('/register',methods = ["GET","POST"])
 def register():
-    if request.method =="GET":
-        return render_template("register.html")
-    else:
-        userid = request.form.get("userid")
-        username = request.form.get("username")
-        password = request.form.get("passsword")
-        re_password = request.form.get("re-passsword")
+    form = RegisterForm()
+    if form.validate_on_submit(): # 값도 가져올 필요 없고 유효성검사도 지 혼자 해줌.
 
-        if not userid and username and password and re_password:
-            return render_template("register.html")
-
-        if password != re_password:
-            return render_template("register.html")
-        
         fcuser = Fcuser()
-        fcuser.userid = userid
-        fcuser.username = username
-        fcuser.password = password
+        fcuser.userid = form.data.get("userid")
+        fcuser.username = form.data.get("username")           
+        fcuser.password = form.data.get("password")
+
 
         db.session.add(fcuser)
         db.session.commit()
+        print("success")
 
         return redirect("/")
+    return render_template("register.html",form=form)
+        
+    
+
+@app.route('/login',methods = ["GET","POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit(): 
+        session["userid"] = form.data.get("userid")
+        return redirect("/")
+        
+    return render_template("login.html",form=form)
+    
+
+
 
 @app.route('/')
 def hello():
-    return render_template("hello.html")
+    userid = session.get("userid",None)
+    return render_template("hello.html", userid=userid)
     #라우트 안에 컨트롤러 역할을 하는 기능이 담길 예정
     #분리해서 담아준다.
     #컨트롤러와 뷰의 분리
@@ -57,6 +69,13 @@ if __name__ == "__main__":
 # DB 에 반영
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+    app.config["SECRET_KEY"] = "asdoduahfoeafh"
+
+
+
+    csrf = CSRFProtect()
+    csrf.init_app(app)
+    
     db.init_app(app)
     db.app = app
     db.create_all()
